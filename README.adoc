@@ -11,14 +11,18 @@ spring boot version.
 
 E.g.
 
+[source]
+----
 your-spring-boot-application
   +-- spring boot version 2.6.3
+     +---- slf4j
   +-- your-lib-v1
 
 
 your-lib-v1
   -- slf4j
 
+----
 
 How to get them in sync when your-lib-v1 has absolutely no idea about spring.
 Of course, you could let gradle do the work for you, but if you want to avoid any side effects, you should
@@ -35,6 +39,18 @@ spring-framework dependency not belonging to spring itself will be collected.
 
 After all the dependencies are printed out at console.
 
- 
+It will contain a groovy array `library_spring` with dedicated names.
+
+inset this code inside an included gradle file and use the array inside your dependencies
+
+For example:
+
+[source, gradle]
+----
+dependencies {
+   implementation library_spring.slf4j_api
+   testImplementation library_spring.junit_jupiter
+}
+----
 
 

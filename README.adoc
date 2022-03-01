@@ -1,0 +1,40 @@
+== README
+Dependagen is a tool for dependencies.
+
+=== Features
+==== Currently only spring boot gradle dependency generation
+Currently it only supports a generation of a gradle snippet containing all top level dependencies by a spring
+boot gradle version.
+
+This is interesting when you have e.g. an internal library which shall use same slf4j version as used in
+spring boot version.
+
+E.g.
+
+your-spring-boot-application
+  +-- spring boot version 2.6.3
+  +-- your-lib-v1
+
+
+your-lib-v1
+  -- slf4j
+
+
+How to get them in sync when your-lib-v1 has absolutely no idea about spring.
+Of course, you could let gradle do the work for you, but if you want to avoid any side effects, you should
+simply use exact sl4fj version in your library as used in spring boot.
+
+===== Howto
+Start `Main.java` this will internally call 
+`gradlew --dependencies` in 
+`/gradle-projects/demo`
+and store the output in a temporary gen folder.
+
+The the output will be parsed into an dependency model. This model is inspected and everything below a 
+spring-framework dependency not belonging to spring itself will be collected.
+
+After all the dependencies are printed out at console.
+
+ 
+
+

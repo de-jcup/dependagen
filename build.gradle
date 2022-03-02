@@ -7,7 +7,7 @@ apply plugin: 'java-library'
 apply plugin: 'eclipse'
 
 group = "de.jcup.springboot.dependagen"
-version = "0.1.0"
+version = "0.1.1"
 
 dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'

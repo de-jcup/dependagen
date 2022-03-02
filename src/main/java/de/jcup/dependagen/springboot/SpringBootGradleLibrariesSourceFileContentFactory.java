@@ -51,7 +51,7 @@ public class SpringBootGradleLibrariesSourceFileContentFactory {
 		sb.append("     // (see https://github.com/de-jcup/dependagen)\n\n");
 
 		createDependencies(map, sb);
-		sb.append("  ],\n");
+		sb.append("  ]\n\n");
 		sb.append("  spring_boot_dependency_version = [\n");
 		createVersionsOfDependencies(map, sb);
 		sb.append("  ]\n");

@@ -15,7 +15,9 @@ public class SpringBootLibrariesFileGenerator {
 	public void generate() throws IOException {
 
 		/* generate dependency output */
-		ProcessBuilder pb = new ProcessBuilder("./generate-gradle-output.sh");
+		File directory = new File("./gradle-templates/spring-boot");
+		ProcessBuilder pb = new ProcessBuilder(new File(directory,"generate-gradle-output.sh").getAbsolutePath());
+		pb.directory(directory);
 		Process process = pb.start();
 		try {
 			process.waitFor(2, TimeUnit.MINUTES);
@@ -23,7 +25,7 @@ public class SpringBootLibrariesFileGenerator {
 			throw new IOException("Was not able to wait for result", e);
 		}
 		TextFileReader reader = new TextFileReader();
-		String testRuntimeClasspathTree = reader.read(new File("./gen/test_runtime_classpath_dependencies.txt"));
+		String testRuntimeClasspathTree = reader.read(new File("./gen/gradle-templates/springboot/test_runtime_classpath_dependencies.txt"));
 
 		GradleDependencyTreeOutputParser parser = new GradleDependencyTreeOutputParser();
 		DependaGenModel model = parser.parseDependencyTreeText(testRuntimeClasspathTree);
@@ -32,7 +34,7 @@ public class SpringBootLibrariesFileGenerator {
 		String created = generator.create(model);
 
 		TextFileWriter writer = new TextFileWriter();
-		File targetFile = new File("./gen/spring_boot_dependagen.gradle");
+		File targetFile = new File("./gen/gradle-templates/springboot/spring_boot_dependagen.gradle");
 		writer.write(targetFile, created, true);
 
 		System.out.println(created);

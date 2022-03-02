@@ -1,11 +1,17 @@
+ifdef::env-github[]
+:tip-caption: :bulb:
+:note-caption: :information_source:
+:important-caption: :heavy_exclamation_mark:
+:caution-caption: :fire:
+:warning-caption: :warning:
+endif::[]
+
 == README
 Dependagen is a tool for dependencies.
+Currently only spring boot gradle dependency generation is supported.
 
 === Features
-==== Currently only spring boot gradle dependency generation
-Currently it only supports a generation of a gradle snippet containing all top level dependencies by a spring
-boot gradle version.
-
+==== Generation of `spring_boot_dependagen.gradle`
 This is interesting when you have e.g. an internal library which shall use same slf4j version as used in
 spring boot version.
 
@@ -28,20 +34,20 @@ How to get them in sync when your-lib-v1 has absolutely no idea about spring.
 Of course, you could let gradle do the work for you, but if you want to avoid any side effects, you should
 simply use exact sl4fj version in your library as used in spring boot.
 
-===== Howto
-Start `Main.java` this will internally call 
-`gradlew --dependencies` in 
-`/gradle-projects/demo`
-and store the output in a temporary gen folder.
+===== How to use
+1. change the spring boot template if necessary (e.g. new spring boot version used, or additional dependencies etc.)
+2. Execute without parameters 
 
-The the output will be parsed into an dependency model. This model is inspected and everything below a 
-spring-framework dependency not belonging to spring itself will be collected.
+TIP: This must be done inside IDE because currently there is no bootable jar available:
 
-After all the dependencies are printed out at console.
+Execute `Main.java` without parameters.
 
-It will contain a groovy array `library_spring` with dedicated names.
+This will resolve gradle spring boot dependencies found inside 'gradle-templates/spring-boot' and generate
 
-inset this code inside an applied gradle file and use the array inside your dependencies
+`/gen/gradle-templates/springboot/spring_boot_dependagen.gradle`
+
+You can apply and use the generated data inside your build. 
+
 
 For example:
 

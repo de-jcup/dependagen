@@ -15,31 +15,14 @@
  */
 package de.jcup.dependagen;
 
-import java.io.IOException;
-import java.io.InputStream;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import de.jcup.dependagen.util.TextFileReader;
+@SpringBootApplication
+public class DemoApplication {
 
-public class Version {
-	
-	public static final Version INSTANCE = new Version();
-	
-	private String versionString;
-	
-	private Version(){
-		
+	public static void main(String[] args) {
+		SpringApplication.run(DemoApplication.class, args);
 	}
 
-	public String getVersionString() {
-		if (versionString==null) {
-			InputStream inputStream = getClass().getResourceAsStream("/version.txt");
-			TextFileReader reader = new TextFileReader();
-			try {
-				versionString = reader.read(inputStream,"version.txt");
-			} catch (IOException e) {
-				throw new IllegalStateException("Cannot determine version",e);
-			}
-		}
-		return versionString;
-	}
 }

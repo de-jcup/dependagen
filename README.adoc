@@ -41,15 +41,26 @@ After all the dependencies are printed out at console.
 
 It will contain a groovy array `library_spring` with dedicated names.
 
-inset this code inside an included gradle file and use the array inside your dependencies
+inset this code inside an applied gradle file and use the array inside your dependencies
 
 For example:
 
-[source, gradle]
+[source, groovy]
 ----
+apply from: 'spring_boot_dependagen.gradle'
+
+// ...
+
 dependencies {
-   implementation library_spring.slf4j_api
-   testImplementation library_spring.junit_jupiter
+   // directly reuse the spring boot dependency
+   implementation spring_boot_dependency.slf4j_api
+   testImplementation spring_boot_dependency.junit_jupiter
+   
+   
+   // If you want to define parts which are not defined on top (so not listed in generated part) you rely on the version of another:
+   // e.g. jackson core is not listed, only jackson annotations. But when you want to use only core inside your
+   // own library, you can simply do following:
+   implementation "com.fasterxml.jackson.core:jackson-core:${spring_boot_dependency_version.jackson_annotations}"
 }
 ----
 

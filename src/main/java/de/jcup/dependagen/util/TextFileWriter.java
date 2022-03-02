@@ -9,11 +9,11 @@ import java.nio.charset.Charset;
 
 public class TextFileWriter {
 
-	public void save(File targetFile, String text, boolean overwrite) throws IOException {
-		internalSave(targetFile, text, overwrite, Charset.forName("UTF-8"));
+	public void write(File targetFile, String text, boolean overwrite) throws IOException {
+		internalWrite(targetFile, text, overwrite, Charset.forName("UTF-8"));
 	}
 
-	private void internalSave(File targetFile, String text, boolean overwrite, Charset charset) throws IOException {
+	private void internalWrite(File targetFile, String text, boolean overwrite, Charset charset) throws IOException {
 		if (targetFile == null) {
 			throw new IllegalArgumentException("null not allowed as file!");
 		}

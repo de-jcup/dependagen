@@ -35,12 +35,14 @@ Of course, you could let gradle do the work for you, but if you want to avoid an
 simply use exact sl4fj version in your library as used in spring boot.
 
 ===== How to use
+[WARNING]
+====
+This must be done inside *IDE* because currently the spring boot jar does not
+contain the template files! This will be changed in future.
+====
+
 1. change the spring boot template if necessary (e.g. new spring boot version used, or additional dependencies etc.)
-2. Execute without parameters 
-
-TIP: This must be done inside IDE because currently there is no bootable jar available:
-
-Execute `Main.java` without parameters.
+2. Execute `DependaGenApplication.java` with `generate` as parameter.
 
 This will resolve gradle spring boot dependencies found inside 'gradle-templates/spring-boot' and generate
 
@@ -63,9 +65,10 @@ dependencies {
    testImplementation spring_boot_dependency.junit_jupiter
    
    
-   // If you want to define parts which are not defined on top (so not listed in generated part) you rely on the version of another:
-   // e.g. jackson core is not listed, only jackson annotations. But when you want to use only core inside your
-   // own library, you can simply do following:
+   // You can use also the library version - maybe for a sub library not already listed,
+   // but which must use same version as another spring dependency.
+   // (Next is an unnecessary, but working example - because jackson-core dependency is availabl
+   // inside spring_boot_dependency with dependagen >=0.2.0)
    implementation "com.fasterxml.jackson.core:jackson-core:${spring_boot_dependency_version.jackson_annotations}"
 }
 ----

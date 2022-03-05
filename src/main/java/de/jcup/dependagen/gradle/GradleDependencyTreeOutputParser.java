@@ -21,13 +21,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import de.jcup.dependagen.gradle.GradleTreeDataParser.GradleTreeData;
 import de.jcup.dependagen.model.DependaGenModel;
 import de.jcup.dependagen.model.DependencyNode;
 
+@Component
 public class GradleDependencyTreeOutputParser {
 
-	GradleTreeDataParser parser = new GradleTreeDataParser();
+	@Autowired
+	GradleTreeDataParser parser;
+	
 	private Map<Integer, DependencyNode> map = new TreeMap<>();
 
 	public DependaGenModel parseDependencyTreeText(String text) {

@@ -13,17 +13,20 @@
  * and limitations under the License.
  *
  */
-package de.jcup.dependagen;
+package de.jcup.dependagen.param;
 
-import static org.junit.jupiter.api.Assertions.*;
+public enum Template implements NamedParam{
 
-import org.junit.jupiter.api.Test;
+	SPRING_BOOT("spring-boot");
+	
+	private String paramName;
 
-class VersionTest {
-
-	@Test
-	void verson_string_is_not_null() {
-		assertNotNull(Version.INSTANCE.getVersionString());
+	private Template(String paramName) {
+		this.paramName = paramName;
 	}
 
+	@Override
+	public String getParamName() {
+		return paramName;
+	}
 }

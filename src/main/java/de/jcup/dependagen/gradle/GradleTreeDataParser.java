@@ -15,6 +15,9 @@
  */
 package de.jcup.dependagen.gradle;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class GradleTreeDataParser {
 
 	/**

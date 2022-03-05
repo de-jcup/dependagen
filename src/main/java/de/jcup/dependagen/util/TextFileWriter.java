@@ -22,6 +22,9 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class TextFileWriter {
 
 	public void write(File targetFile, String text, boolean overwrite) throws IOException {

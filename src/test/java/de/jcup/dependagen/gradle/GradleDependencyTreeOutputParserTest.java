@@ -37,6 +37,8 @@ class GradleDependencyTreeOutputParserTest {
 	@BeforeEach
 	void beforeEach() {
 		parserToTest = new GradleDependencyTreeOutputParser();
+		parserToTest.parser=new GradleTreeDataParser();
+
 	}
 
 	@Test

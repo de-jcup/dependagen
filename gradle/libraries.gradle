@@ -1,0 +1,7 @@
+ext {
+
+  library = [ 
+         springboot_starter:                    'org.springframework.boot:spring-boot-starter',
+         springboot_starter_test:               'org.springframework.boot:spring-boot-starter-test',
+  ]
+}

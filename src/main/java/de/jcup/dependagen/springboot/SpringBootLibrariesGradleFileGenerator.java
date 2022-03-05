@@ -15,18 +15,40 @@
  */
 package de.jcup.dependagen.springboot;
 
+import static de.jcup.dependagen.util.OutputConstants.LINE;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import de.jcup.dependagen.Console;
+import de.jcup.dependagen.VersionSupport;
 import de.jcup.dependagen.gradle.GradleDependencyTreeOutputParser;
 import de.jcup.dependagen.model.DependaGenModel;
 import de.jcup.dependagen.util.TextFileReader;
 import de.jcup.dependagen.util.TextFileWriter;
-import static de.jcup.dependagen.util.OutputConstants.LINE;
 
-public class SpringBootLibrariesFileGenerator {
+@Component
+public class SpringBootLibrariesGradleFileGenerator {
 
+	@Autowired
+	VersionSupport versionSupport;
+	
+	@Autowired
+	GradleDependencyTreeOutputParser parser;
+	
+	@Autowired
+	SpringBootGradleLibrariesSourceFileContentFactory factory;	
+	
+	@Autowired
+	TextFileWriter writer;
+	
+	@Autowired
+	TextFileReader reader;
+	
 	public void generate() throws IOException {
 
 		/* generate dependency output */
@@ -39,23 +61,19 @@ public class SpringBootLibrariesFileGenerator {
 		} catch (InterruptedException e) {
 			throw new IOException("Was not able to wait for result", e);
 		}
-		TextFileReader reader = new TextFileReader();
 		String testRuntimeClasspathTree = reader.read(new File("./gen/gradle-templates/springboot/test_runtime_classpath_dependencies.txt"));
 
-		GradleDependencyTreeOutputParser parser = new GradleDependencyTreeOutputParser();
 		DependaGenModel model = parser.parseDependencyTreeText(testRuntimeClasspathTree);
 
-		SpringBootGradleLibrariesSourceFileContentFactory generator = new SpringBootGradleLibrariesSourceFileContentFactory();
-		String created = generator.create(model);
+		String created = factory.create(model);
 
-		TextFileWriter writer = new TextFileWriter();
 		File targetFile = new File("./gen/gradle-templates/springboot/spring_boot_dependagen.gradle");
 		writer.write(targetFile, created, true);
 
-		System.out.println(created);
-		System.out.println(LINE);
-		System.out.println("wrote to " + targetFile.getAbsolutePath());
-		System.out.println(LINE);
+		Console.LOG.info(created);
+		Console.LOG.info(LINE);
+		Console.LOG.info(("wrote to " + targetFile.getAbsolutePath()));
+		Console.LOG.info(LINE);
 
 	}
 

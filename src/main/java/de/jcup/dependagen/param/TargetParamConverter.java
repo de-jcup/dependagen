@@ -13,15 +13,12 @@
  * and limitations under the License.
  *
  */
-package de.jcup.dependagen;
+package de.jcup.dependagen.param;
 
-import de.jcup.dependagen.springboot.SpringBootLibrariesFileGenerator;
+public class TargetParamConverter extends NamedParamConverter<Target>{
 
-public class Main {
-
-	public static void main(String[] args) throws Exception{
-		SpringBootLibrariesFileGenerator libraryFilesGenerator = new SpringBootLibrariesFileGenerator();
-		libraryFilesGenerator.generate();
+	public TargetParamConverter() {
+		super(Target.values());
 	}
-	
+
 }

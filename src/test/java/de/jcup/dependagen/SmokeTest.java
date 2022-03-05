@@ -15,31 +15,19 @@
  */
 package de.jcup.dependagen;
 
-import java.io.IOException;
-import java.io.InputStream;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import static org.junit.jupiter.api.Assertions.*;
 
-import de.jcup.dependagen.util.TextFileReader;
+@SpringBootTest
+class SmokeTest {
 
-public class Version {
-	
-	public static final Version INSTANCE = new Version();
-	
-	private String versionString;
-	
-	private Version(){
-		
-	}
+	@Autowired
+	VersionSupport versionSupport;
 
-	public String getVersionString() {
-		if (versionString==null) {
-			InputStream inputStream = getClass().getResourceAsStream("/version.txt");
-			TextFileReader reader = new TextFileReader();
-			try {
-				versionString = reader.read(inputStream,"version.txt");
-			} catch (IOException e) {
-				throw new IllegalStateException("Cannot determine version",e);
-			}
-		}
-		return versionString;
+	@Test
+	public void contextLoads() throws Exception {
+		assertNotNull(versionSupport);
 	}
 }

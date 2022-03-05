@@ -1,3 +1,9 @@
+
+
+plugins {
+    id 'org.springframework.boot' version '2.6.4'
+}
+
 repositories {
     mavenCentral()
 }
@@ -5,14 +11,20 @@ repositories {
 apply plugin: 'java'
 apply plugin: 'java-library'
 apply plugin: 'eclipse'
+apply plugin: 'io.spring.dependency-management'
+
+apply from:   "$projectDir/gradle/libraries.gradle"
 
 group = "de.jcup.springboot.dependagen"
-version = "0.1.1"
+version = "0.2.0"
 
 dependencies {
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
-    testImplementation 'org.junit.jupiter:junit-jupiter-params:5.8.2'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
+    implementation(library.springboot_starter)
+    testImplementation(library.springboot_starter_test)
+    
+    // https://mvnrepository.com/artifact/com.beust/jcommander
+    implementation group: 'com.beust', name: 'jcommander', version: '1.82'
+    
 }
 
 test {

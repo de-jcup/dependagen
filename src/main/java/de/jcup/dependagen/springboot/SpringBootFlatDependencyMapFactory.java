@@ -46,12 +46,19 @@ public class SpringBootFlatDependencyMapFactory {
 		for (DependencyNode node : parent.getDependencies()) {
 			String group = node.getGroup();
 			if (group.indexOf("springframework") != -1) {
-				/* inside springframwork dependency - so go deeper */
+				/* inside spring framework dependency - so just go deeper */
 				append(map, node);
 			} else {
-				/* not spring itself - so upper dependency */
+				/* not spring itself - so dependency */
 				String id = nodeSupport.createLibraryId(node);
-				map.put(id, node);
+				DependencyNode before = map.get(id);
+				if (before==null) {
+					/* not found before - so add mapping */
+					map.put(id, node);
+				}
+				/* go deeper */
+				append(map,node);
+				
 			}
 		}
 

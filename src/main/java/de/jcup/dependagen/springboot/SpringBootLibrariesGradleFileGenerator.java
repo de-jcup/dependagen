@@ -21,6 +21,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -34,47 +36,52 @@ import de.jcup.dependagen.util.TextFileWriter;
 @Component
 public class SpringBootLibrariesGradleFileGenerator {
 
-	@Autowired
-	VersionSupport versionSupport;
-	
-	@Autowired
-	GradleDependencyTreeOutputParser parser;
-	
-	@Autowired
-	SpringBootGradleLibrariesSourceFileContentFactory factory;	
-	
-	@Autowired
-	TextFileWriter writer;
-	
-	@Autowired
-	TextFileReader reader;
-	
-	public void generate() throws IOException {
+    private static final Logger LOG = LoggerFactory.getLogger(SpringBootLibrariesGradleFileGenerator.class);
 
-		/* generate dependency output */
-		File directory = new File("./gradle-templates/spring-boot");
-		ProcessBuilder pb = new ProcessBuilder(new File(directory,"generate-gradle-output.sh").getAbsolutePath());
-		pb.directory(directory);
-		Process process = pb.start();
-		try {
-			process.waitFor(2, TimeUnit.MINUTES);
-		} catch (InterruptedException e) {
-			throw new IOException("Was not able to wait for result", e);
-		}
-		String testRuntimeClasspathTree = reader.read(new File("./gen/gradle-templates/springboot/test_runtime_classpath_dependencies.txt"));
+    @Autowired
+    VersionSupport versionSupport;
 
-		DependaGenModel model = parser.parseDependencyTreeText(testRuntimeClasspathTree);
+    @Autowired
+    GradleDependencyTreeOutputParser parser;
 
-		String created = factory.create(model);
+    @Autowired
+    SpringBootGradleLibrariesSourceFileContentFactory factory;
 
-		File targetFile = new File("./gen/gradle-templates/springboot/spring_boot_dependagen.gradle");
-		writer.write(targetFile, created, true);
+    @Autowired
+    TextFileWriter writer;
 
-		Console.LOG.info(created);
-		Console.LOG.info(LINE);
-		Console.LOG.info(("wrote to " + targetFile.getAbsolutePath()));
-		Console.LOG.info(LINE);
+    @Autowired
+    TextFileReader reader;
 
-	}
+    public void generate() throws IOException {
+
+        /* generate dependency output */
+        File directory = new File("./gradle-templates/spring-boot");
+        File file = new File(directory, "generate-gradle-output.sh");
+        LOG.debug("Start gradle process by executing \nscript:{} \ninside:{}", file, directory);
+
+        ProcessBuilder pb = new ProcessBuilder(file.getAbsolutePath());
+        pb.directory(directory);
+        Process process = pb.start();
+        try {
+            process.waitFor(2, TimeUnit.MINUTES);
+        } catch (InterruptedException e) {
+            throw new IOException("Was not able to wait for result", e);
+        }
+        String testRuntimeClasspathTree = reader.read(new File("./gen/gradle-templates/springboot/test_runtime_classpath_dependencies.txt"));
+
+        DependaGenModel model = parser.parseDependencyTreeText(testRuntimeClasspathTree);
+        Console.LOG.info("Model parsed");
+        String created = factory.create(model);
+
+        File targetFile = new File("./gen/gradle-templates/springboot/spring_boot_dependagen.gradle");
+        writer.write(targetFile, created, true);
+
+        Console.LOG.info(created);
+        Console.LOG.info(LINE);
+        Console.LOG.info(("wrote to " + targetFile.getAbsolutePath()));
+        Console.LOG.info(LINE);
+
+    }
 
 }

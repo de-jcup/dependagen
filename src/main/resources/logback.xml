@@ -42,5 +42,9 @@
         <appender-ref ref="RollingFile" />
         <appender-ref ref="Console" />
     </logger>
+    
+     <logger name="de.jcup.dependagen" level="debug" additivity="false">
+        <appender-ref ref="RollingFile" />
+    </logger>
 
 </configuration>

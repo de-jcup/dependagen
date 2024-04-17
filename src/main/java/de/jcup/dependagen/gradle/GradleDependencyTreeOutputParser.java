@@ -21,6 +21,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -31,15 +33,18 @@ import de.jcup.dependagen.model.DependencyNode;
 @Component
 public class GradleDependencyTreeOutputParser {
 
-	@Autowired
-	GradleTreeDataParser parser;
-	
-	private Map<Integer, DependencyNode> map = new TreeMap<>();
+    private static final Logger LOG = LoggerFactory.getLogger(GradleDependencyTreeOutputParser.class);
 
-	public DependaGenModel parseDependencyTreeText(String text) {
+    @Autowired
+    GradleTreeDataParser parser;
 
-		DependaGenModel model = new DependaGenModel();
-		map.put(0,model.getRootNode());
+    private Map<Integer, DependencyNode> map = new TreeMap<>();
+
+    public DependaGenModel parseDependencyTreeText(String text) {
+        LOG.debug("Start parsing text:\n{}", text);
+
+        DependaGenModel model = new DependaGenModel();
+        map.put(0, model.getRootNode());
 
 //		testRuntimeClasspath - Runtime classpath of source set 'test'.
 //		+--- org.springframework.boot:spring-boot-starter-data-jpa -> 2.6.4
@@ -47,59 +52,61 @@ public class GradleDependencyTreeOutputParser {
 //		+--- org.springframework.boot:spring-boot-starter-test -> 2.6.4
 //		\--- org.springframework.restdocs:spring-restdocs-mockmvc -> 2.0.6.RELEASE
 
-		String[] lines = text.split("\n");
+        String[] lines = text.split("\n");
 
-		for (String line : lines) {
-			/* first line */
-			GradleTreeData newNodeData = parser.parse(line);
-			if (!newNodeData.isTreeElement) {
-				continue;
-			}
-			DependencyNode parent = getParentForColumn(newNodeData.column);
-			
-			DependencyNode newNode = new DependencyNode();
-			newNode.setGroup(newNodeData.group);
-			newNode.setVersion(newNodeData.definedVersion);
-			newNode.setArtifact(newNodeData.artifact);
-			
-			/* drop all smaller entries, so this node will be the parent at this colum now*/
-			dropAllSmallerEntries(newNodeData,newNode);
-			
-			newNode.setParent(parent);
+        for (String line : lines) {
+            LOG.debug("Processing line: {}", line);
+            
+            /* first line */
+            GradleTreeData newNodeData = parser.parse(line);
+            if (!newNodeData.isTreeElement) {
+                continue;
+            }
+            LOG.debug("> Tree element found");
+            DependencyNode parent = getParentForColumn(newNodeData.column);
 
-		}
+            DependencyNode newNode = new DependencyNode();
+            newNode.setGroup(newNodeData.group);
+            newNode.setVersion(newNodeData.definedVersion);
+            newNode.setArtifact(newNodeData.artifact);
 
-		return model;
-	}
-	
-	private void dropAllSmallerEntries(GradleTreeData newNodeData, DependencyNode newNode) {
-		List<Integer> list = new ArrayList<>(map.keySet());
-		for (Integer keyColumn : list) {
-			if (keyColumn>=newNodeData.column) {
-				map.remove(keyColumn);
-			}
-		}
-		map.put(newNodeData.column, newNode);
-	}
-	
-	
-	
-	
-	private DependencyNode getParentForColumn(int column) {
-		DependencyNode defined = map.get(column);
-		if (defined!=null) {
-			return defined.getParent();
-		}
-		/* must search*/
-		List<Integer> topDownList = new ArrayList<>(map.keySet());
-		Collections.sort(topDownList, Collections.reverseOrder());
-		for (Integer keyColumn : topDownList) {
-			if (keyColumn<=column) {
-				DependencyNode resolvedParent = map.get(keyColumn);
-				return resolvedParent;
-			}
-		}
-		return null;
-	}
+            /*
+             * Drop all smaller entries, so this node will be the parent at this column now
+             */
+            dropAllSmallerEntries(newNodeData, newNode);
+
+            newNode.setParent(parent);
+
+        }
+
+        return model;
+    }
+
+    private void dropAllSmallerEntries(GradleTreeData newNodeData, DependencyNode newNode) {
+        List<Integer> list = new ArrayList<>(map.keySet());
+        for (Integer keyColumn : list) {
+            if (keyColumn >= newNodeData.column) {
+                map.remove(keyColumn);
+            }
+        }
+        map.put(newNodeData.column, newNode);
+    }
+
+    private DependencyNode getParentForColumn(int column) {
+        DependencyNode defined = map.get(column);
+        if (defined != null) {
+            return defined.getParent();
+        }
+        /* must search */
+        List<Integer> topDownList = new ArrayList<>(map.keySet());
+        Collections.sort(topDownList, Collections.reverseOrder());
+        for (Integer keyColumn : topDownList) {
+            if (keyColumn <= column) {
+                DependencyNode resolvedParent = map.get(keyColumn);
+                return resolvedParent;
+            }
+        }
+        return null;
+    }
 
 }

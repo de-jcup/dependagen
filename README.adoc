@@ -1,3 +1,7 @@
+:toc:
+:toc-title: Table of contents
+:toclevels: 5
+
 ifdef::env-github[]
 :tip-caption: :bulb:
 :note-caption: :information_source:
@@ -10,7 +14,7 @@ endif::[]
 Dependagen is a tool for dependencies.
 Currently only spring boot gradle dependency generation is supported.
 
-:toc:
+
 
 === Features
 ==== Generation of `spring_boot_dependagen.gradle`

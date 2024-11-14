@@ -34,15 +34,46 @@ How to get them in sync when your-lib-v1 has absolutely no idea about spring.
 Of course, you could let gradle do the work for you, but if you want to avoid any side effects, you should
 simply use exact sl4fj version in your library as used in spring boot.
 
-===== How to use
-[WARNING]
+===== How to use from CLI
+
+====== Build 
+Inside root folder of the dependagen project, execute:
+[source]
+----
+./gradlew bootJar
+----
+
+====== Execute( Spring Boot template)
+
+[NOTE]
 ====
-This must be done inside *IDE* because currently the spring boot jar does not
-contain the template files! This will be changed in future.
+Here we use the spring boot template which comes with the 
+repository and default target '"gradle".
+
+The used path to resolve the template is:
+`./gradle-templates/spring-boot`
+
+To change the spring boot template version to use is to change
+the used spring boot version inside
+`.gradle-templates/spring-boot/template_build.gradle`
 ====
 
-1. change the spring boot template if necessary (e.g. new spring boot version used, or additional dependencies etc.)
-2. Execute `DependaGenApplication.java` with `generate` as parameter.
+Inside root folder of the dependagen project, execute:
+
+[source]
+----
+java -jar ./build/libs/dependagen-0.3.0.jar --template spring-boot --target-output gradle generate
+----
+
+Afterwards you find
+`/gen/gradle-templates/springboot/spring_boot_dependagen.gradle`
+You can apply and use the generated data inside your build. 
+
+===== How to use from IDE. 
+
+====== Execute( Spring Boot template)
+Change `.gradle-templates/spring-boot/template_build.gradle` if necessary (e.g. new spring boot version used, or additional dependencies etc.)
+2. Execute `DependaGenApplication.java` with `--template spring-boot generate` as parameter.
 
 This will resolve gradle spring boot dependencies found inside 'gradle-templates/spring-boot' and generate
 

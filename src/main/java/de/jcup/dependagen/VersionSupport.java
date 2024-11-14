@@ -15,28 +15,16 @@
  */
 package de.jcup.dependagen;
 
-import java.io.IOException;
-import java.io.InputStream;
-
 import org.springframework.stereotype.Component;
-
-import de.jcup.dependagen.util.TextFileReader;
 
 @Component
 public class VersionSupport {
-	
 	private String versionString;
 	
 	public String getVersionString() {
-		if (versionString==null) {
-			InputStream inputStream = getClass().getResourceAsStream("/version.txt");
-			TextFileReader reader = new TextFileReader();
-			try {
-				versionString = reader.read(inputStream,"version.txt");
-			} catch (IOException e) {
-				throw new IllegalStateException("Cannot determine version",e);
-			}
-		}
+	    if (versionString==null) {
+	        versionString = getClass().getPackage().getImplementationVersion();
+	    }
 		return versionString;
 	}
 }

@@ -50,7 +50,6 @@ public class DependaGenCLIComponent {
 		@Override
 		public void run(String... args) throws Exception {
 			LOG.info("Dependagen starting");
-			Console.LOG.info("Version {}", versionSupport.getVersionString());
 			
 			DependaGenCLIParameters arguments = new DependaGenCLIParameters();
 

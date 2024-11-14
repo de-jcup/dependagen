@@ -16,7 +16,7 @@ apply plugin: 'io.spring.dependency-management'
 apply from:   "$projectDir/gradle/libraries.gradle"
 
 group = "de.jcup.springboot.dependagen"
-version = "0.2.0"
+version = "0.3.0"
 
 dependencies {
     implementation(library.springboot_starter)
@@ -70,4 +70,12 @@ tasks.eclipse.dependsOn << {
     }
 }
 tasks.assemble.dependsOn(tasks.genVersion);
+
+
+bootJar {
+    manifest {
+        attributes('Implementation-Title':   'DependaGen',
+                   'Implementation-Version': version)
+    }
+}
 

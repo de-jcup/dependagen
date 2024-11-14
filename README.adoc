@@ -10,6 +10,8 @@ endif::[]
 Dependagen is a tool for dependencies.
 Currently only spring boot gradle dependency generation is supported.
 
+:toc:
+
 === Features
 ==== Generation of `spring_boot_dependagen.gradle`
 This is interesting when you have e.g. an internal library which shall use same slf4j version as used in
